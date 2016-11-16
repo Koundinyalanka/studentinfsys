@@ -1,116 +1,211 @@
 
-#include <stdio.h>
-#include <stdlib.h>
+#include<stdio.h>
 
-typedef struct student
-  {
-    int id,Marks10,Marks12,MarksUG,NoOfBacklogs;
-    char name[31];
-  }stu;
+ int bubble(int*,int);
+ void filewrite();
+ void avgmarks();
+ void fileprint();
+ void filesort();
+ void rollin();
 
-
-void addStudRecord();
-void dislay_all();
-void modifyStudentRecord();
-void eligbilityList();
-void displayStudentDetails(int);
-void sort();
-
-void main()
+/*********************** SORTING FUNCTION ***************************/
+int bubble(int x[],int n)
+{
+ int hold,j,pass,i,switched = 1;
+ for(pass = 0; pass < n-1 && switched == 1;pass++)
+ {
+  switched=0;
+  for (j=0;j<n-pass-1;j++)
+   if (x[j]>x[j+1])
    {
-   FILE *fp;
-   int count=0,num;
-   char password[10];
-   stu s;
-   int i,j,login_choice,menu_choice;
-
-   printf("\n\n\n Log-in as:\n\n");
-   printf("	1. STUDENT\n\n");
-   printf("	2. ADMIN\n\n");
-   printf(" Enter choice: ");
-   scanf("%d", &login_choice);
-
-   switch(login_choice)
-   {
-       case 1:
-
-            fp=fopen("stud.txt", "rw");
-            if(fp==NULL)
-            {
-                printf("\n\nSTUDENT LOG-IN");
-                printf("\n\nEnter student number: ");
-                scanf("%d",&num);
-                displayStudentDetails(num);// Display the entered student information from file.
-                getch();
-            }
-            else
-                printf("Student file doesnot exist!!!!");
-
-            break;
-        case 2:
-            printf("\n\nADMIN LOG-IN");
-            printf("\n\nEnter password: ");
-            fflush(stdin);
-            gets(password);
-            if(strcmp(password, "admin") == 0)
-            {
-                printf("\n\nYou have successfully logged-in! Press any key to continue...");
-                getch();
-                do
-                {
-                    printf("\n\nADMIN MENU:\n\n");
-                    printf("\n1 -  Add student record\n");
-                    printf("\n2 -  Display all entries\n");
-                    printf("\n3 -  Modify student record\n");
-                    printf("\n4 -  Display placement eligibility list\n");
-                    printf("\n5 -  Search student based on student number\n");
-                    printf("\n6 -  Display student records in descending order of their marks in UG\n");
-                    printf("\n7 -  Log-out and Exit\n");
-                    printf("\nEnter Choice: ");
-                    scanf("%d", &menu_choice);
-                    switch(menu_choice)
-                    {
-                        case 1:  addStudRecord();break;
-                        case 2:  dislay_all();break;
-                        case 3:  modifyStudentRecord();break;
-                        case 4:  eligbilityList();break;
-                        case 5:  printf("\n\nEnter student number: ");
-                                 scanf("%d",&num);
-                                 displayStudentDetails(num);
-                        case 6:  sort();
-                        case 7:  printf("\n\n\nThank you!");break;
-                    }
-                }while(menu_choice!=7);
-            }
-            else printf("\n\nInvalid password.");
-            break;
+    switched=1;
+    hold = x[j];
+    x[j] = x[j+1];
+    x[j+1]=hold;
+    }
    }
+return(0);
+}
+/*********************** FILE WRITING FUNCTION ******************************/
+void filewrite()
+{
+  int roll,ch,mark;
+  char nam[50];
+   FILE *fp;
+   clrscr();
+  fp = fopen("student.txt","a");
+   printf("ENTER ROLL NUMBER, NAME , MARKS \n");
+  ch =1;
+  while(ch)
+  {
+  scanf("%d%s%d",&roll,&nam,&mark);
+  fprintf(fp,"%d %s %d\n",roll,nam,mark);
+  printf("\n\n press 1 to continue,0 to stop");
+  scanf("%d",&ch);
+  }
+   fclose(fp) ;
+}
+/******************** OUTPUTING DATA ON SCREEN***************/
+void fileprint()
+{
+  int marks[100],rollno[100],x[100],i;
+  char name[100][50];
+  FILE *fp;
+
+  clrscr();
+  fp = fopen("student.txt","r");
+   i=0;
+   printf("ROLLNO       NAME        MARK\n");
+   while(!feof(fp))
+  {
+     fscanf(fp,"%d %s %d\n",&rollno[i],&name[i],&marks[i]);
+     printf(" %d          %s          %d\n",rollno[i],name[i],marks[i]);
+     i=i+1;
+   }
+   fclose(fp);
+   printf("\n\n\nPRESS ANY KEY");
+   getch();
+
+  }
+/******************* SORTING FILE ************************/
+void filesort()
+  { int marks[100],rollno[100],x[100],n,i,j;
+    char name[100][50];
+    FILE *fp,*fm;
+
+    fp = fopen("student.txt","r");
+    fm = fopen("marks.txt","w");
+    i=0;
+   while(! feof(fp))
+    {
+
+     fscanf(fp,"%d %s %d\n",&rollno[i],&name[i],&marks[i]);
+     x[i]= marks[i];
+     i=i+1;
+      }
+
+       n=i;
+
+       bubble(x,n);
+
+    for(i=0;i<n;i++)
+    {
+    printf(" %d\t",x[i]);
+    }
+
+ for(i=0;i<n;i++)
+ {
+   for (j=0;j<n;j++)
+   {
+   if(x[i]==marks[j])
+   {
+      fprintf(fm,"%d %s %d\n",rollno[j],name[j],marks[j]);
+     }
+   }
+ }
+  fclose(fm);
+  fclose(fp);
+  printf("\n\n\nPRESS ANY KEY");
+  getch();
+
+}
+/************************* DATA USING ROLLNO***************************/
+void rollin()
+{   int i,roll,ch,mark,roll1;
+    char nam[50];
+    FILE *fm;
+
+    ch=1;
+  while(ch)
+  { clrscr();
+    fm = fopen("marks.txt","r");
+    printf(" \n ENTER ROLL NUMBER - ");
+    scanf("%d",&roll1);
+      i=0;
+   while(! feof(fm))
+    {
+     fscanf(fm,"%d %s %d\n",&roll,&nam,&mark);
+     if(roll1==roll)
+    {printf("\nROLLNO.     NAME        MARKS\n ");
+     printf(" %d          %s          %d\n",roll,nam,mark);
+     break;
+     }
+     else
+     i=i+1;
+      }
+  printf("\n\npress 1 to see student info, 0 to return to main menu\n");
+  scanf("%d",&ch);
+  fclose(fm);
+  }
+
+
 
  }
 
-void addStudRecord()
-{
-    // Write Code
-}
-void dislay_all()
-{
-    // Write Code
-}
-void modifyStudentRecord()
-{
-    // Write Code
-}
-void eligbilityList()
-{
-    // Write Code
-}
-void displayStudentDetails(int num)
-{
-    // Write Code
-}
-void sort()
-{
-    // Write Code
-}
+void avgmarks()
+ {
+    int marks[100],rollno[100],n,i;
+    float avg,x;
+    char name[100][50];
+    FILE *fm;
+    fm = fopen("marks.txt","r");
+    i=0;
+   while(! feof(fm))
+    {
 
+     fscanf(fm,"%d %s %d\n",&rollno[i],&name[i],&marks[i]);
+     x = x + marks[i];
+     i=i+1;
+      }
+     n = i;
+   avg = x/n;
+  printf("AVERAGE MARKS OF %d STUDENTS ARE -  %f ",n,avg);
+  fclose(fm);
+  printf("\n\n\nPRESS ANY KEY");
+   getch();
+
+ }
+
+
+/**************** FUNC. ENDS************************/
+void main()
+{
+  int marks[100],rollno[100],x[100],n,i,j,roll,c,mark,roll1;
+  char name[100][10],nam[50];
+
+  while(c!=6)
+   {  
+     clrscr();
+     printf("GIVE CHOICE--\n");
+     printf("   1 TO ENTER STUDENT INFO.\n");
+     printf("   2 TO SEE STUDENT.TXT FILE\n");
+     printf("   3 TO SORT FILE ON BASIS OF MARKS\n");
+     printf("   4 TO PRINT STUDENT INFO. USING ROLL NO\n");
+     printf("   5 TO FIND AVERAGE OF MARKS\n");
+     printf("   6 TO EXIT\n\n--");
+     scanf("%d",&c);
+     clrscr();
+     switch(c)
+     {
+     case 1:
+          filewrite();
+          break;
+     case 2:
+          fileprint();
+         break;
+     case 3:
+         filesort();
+         break;
+     case 4:  rollin();
+          break;
+     case 5:  avgmarks();
+          break;
+     case 6:
+          break;
+     default:
+          break;
+     }
+    }
+
+  }
 
