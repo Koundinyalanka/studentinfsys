@@ -1,6 +1,5 @@
-
 #include<stdio.h>
-
+#include<conio.h>
  int bubble(int*,int);
  void filewrite();
  void avgmarks();
@@ -32,7 +31,7 @@ void filewrite()
   int roll,ch,mark;
   char nam[50];
    FILE *fp;
-   clrscr();
+
   fp = fopen("student.txt","a");
    printf("ENTER ROLL NUMBER, NAME , MARKS \n");
   ch =1;
@@ -52,7 +51,7 @@ void fileprint()
   char name[100][50];
   FILE *fp;
 
-  clrscr();
+
   fp = fopen("student.txt","r");
    i=0;
    printf("ROLLNO       NAME        MARK\n");
@@ -117,7 +116,7 @@ void rollin()
 
     ch=1;
   while(ch)
-  { clrscr();
+  {
     fm = fopen("marks.txt","r");
     printf(" \n ENTER ROLL NUMBER - ");
     scanf("%d",&roll1);
@@ -174,8 +173,8 @@ void main()
   char name[100][10],nam[50];
 
   while(c!=6)
-   {  
-     clrscr();
+   {
+
      printf("GIVE CHOICE--\n");
      printf("   1 TO ENTER STUDENT INFO.\n");
      printf("   2 TO SEE STUDENT.TXT FILE\n");
@@ -184,7 +183,7 @@ void main()
      printf("   5 TO FIND AVERAGE OF MARKS\n");
      printf("   6 TO EXIT\n\n--");
      scanf("%d",&c);
-     clrscr();
+
      switch(c)
      {
      case 1:
@@ -208,4 +207,3 @@ void main()
     }
 
   }
-
